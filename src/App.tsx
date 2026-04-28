@@ -31,6 +31,7 @@ type HelperAction = {
   id: string;
   label: string;
   levels: NeedLevel[];
+  explanation: string;
 };
 
 const levels: Array<{
@@ -79,17 +80,17 @@ const levels: Array<{
 
 const needCards: NeedCard[] = [
   { id: 'food', label: 'Food', level: 'body' },
-  { id: 'water', label: 'Water', level: 'body' },
-  { id: 'sleep', label: 'Sleep', level: 'body' },
-  { id: 'shelter', label: 'Shelter', level: 'body' },
-  { id: 'safe-harm', label: 'Safety from harm', level: 'safety' },
   { id: 'family', label: 'Family', level: 'belonging' },
-  { id: 'friends', label: 'Friends', level: 'belonging' },
-  { id: 'school-community', label: 'School/community', level: 'belonging' },
-  { id: 'fairly', label: 'Being treated fairly', level: 'respect' },
-  { id: 'name', label: 'Having your name respected', level: 'respect' },
-  { id: 'learn', label: 'Freedom to learn', level: 'hope' },
+  { id: 'safe-harm', label: 'Safety from harm', level: 'safety' },
   { id: 'dreams', label: 'Dreams for the future', level: 'hope' },
+  { id: 'water', label: 'Water', level: 'body' },
+  { id: 'fairly', label: 'Being treated fairly', level: 'respect' },
+  { id: 'friends', label: 'Friends', level: 'belonging' },
+  { id: 'sleep', label: 'Sleep', level: 'body' },
+  { id: 'learn', label: 'Freedom to learn', level: 'hope' },
+  { id: 'school-community', label: 'School/community', level: 'belonging' },
+  { id: 'shelter', label: 'Shelter', level: 'body' },
+  { id: 'name', label: 'Having your name respected', level: 'respect' },
 ];
 
 const scenarios: Scenario[] = [
@@ -127,29 +128,64 @@ const scenarios: Scenario[] = [
 ];
 
 const helperActions: HelperAction[] = [
-  { id: 'supplies', label: 'Share food and supplies', levels: ['body'] },
-  { id: 'find-safety', label: 'Help people find safety', levels: ['safety'] },
+  {
+    id: 'supplies',
+    label: 'Share food and supplies',
+    levels: ['body'],
+    explanation: 'Sharing food and supplies helps people care for their bodies and feel supported.',
+  },
+  {
+    id: 'find-safety',
+    label: 'Help people find safety',
+    levels: ['safety'],
+    explanation: 'Helping people find safety protects them from harm and fear.',
+  },
   {
     id: 'connected',
     label: 'Keep families and communities connected',
     levels: ['belonging'],
+    explanation: 'Keeping people connected reminds them they are not alone.',
   },
   {
     id: 'real-names',
     label: "Use people's real names and speak respectfully",
     levels: ['respect'],
+    explanation: 'Using real names and respectful words shows that every person matters.',
   },
-  { id: 'learn', label: 'Make sure every child can learn', levels: ['hope'] },
-  { id: 'rumors', label: 'Question unfair rumors', levels: ['safety'] },
+  {
+    id: 'learn',
+    label: 'Make sure every child can learn',
+    levels: ['hope'],
+    explanation: 'Learning helps children grow their ideas and imagine a future.',
+  },
+  {
+    id: 'truth',
+    label: 'Check facts before sharing claims',
+    levels: ['safety'],
+    explanation: 'Checking facts stops false ideas from spreading and helps keep people safer.',
+  },
   {
     id: 'excluded',
     label: 'Stand up when someone is excluded',
     levels: ['belonging'],
+    explanation: 'Standing up for someone helps them feel included and protected by the group.',
   },
-  { id: 'stories', label: "Listen to people's stories", levels: ['hope'] },
+  {
+    id: 'stories',
+    label: "Listen to people's stories",
+    levels: ['hope'],
+    explanation: 'Listening to stories honors memory and helps people feel seen.',
+  },
 ];
 
 const emotions = ['Sad', 'Scared', 'Lonely', 'Angry', 'Confused'];
+const emotionFeedback: Record<string, string> = {
+  Sad: 'Sadness can show that something important has been taken away. Everyone deserves care.',
+  Scared: 'Feeling scared is understandable when safety is missing. Everyone deserves protection.',
+  Lonely: 'Loneliness reminds us that people need family, friends, and community.',
+  Angry: 'Anger can tell us that something is unfair. Fairness and dignity matter.',
+  Confused: 'Confusion can happen when rules are unfair or unkind. Truth helps people feel steadier.',
+};
 const sentenceStarters = [
   'I can include someone by...',
   'I can speak up when...',
@@ -230,7 +266,7 @@ function App() {
     setRestoredLevels((current) =>
       Array.from(new Set([...current, ...action.levels])) as NeedLevel[],
     );
-    setHelperFeedback('This helps rebuild human dignity.');
+    setHelperFeedback(`${action.explanation} This helps rebuild human dignity.`);
   };
 
   return (
@@ -624,7 +660,9 @@ function ScenarioPanel({
             ))}
           </div>
           {scenarioEmotions[activeScenario.id] && (
-            <Feedback message="That feeling makes sense. Everyone deserves this need." />
+            <Feedback
+              message={`${emotionFeedback[scenarioEmotions[activeScenario.id]]} Everyone deserves this need.`}
+            />
           )}
         </div>
       )}
